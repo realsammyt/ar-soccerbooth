@@ -4,7 +4,6 @@ import type { GestureResult, LandmarkPoint } from '../types';
 
 // MediaPipe Pose landmark indices
 const LANDMARK = {
-  NOSE: 0,
   LEFT_WRIST: 15,
   RIGHT_WRIST: 16,
   LEFT_SHOULDER: 11,
@@ -31,7 +30,6 @@ function detectHandRaise(landmarks: LandmarkPoint[] | null): GestureResult {
     return { detected: false, gesture: 'none', confidence: 0 };
   }
 
-  const nose = landmarks[LANDMARK.NOSE];
   const leftWrist = landmarks[LANDMARK.LEFT_WRIST];
   const rightWrist = landmarks[LANDMARK.RIGHT_WRIST];
   const leftShoulder = landmarks[LANDMARK.LEFT_SHOULDER];

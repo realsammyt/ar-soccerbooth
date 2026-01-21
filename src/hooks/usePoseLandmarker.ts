@@ -2,7 +2,6 @@ import { useEffect, useRef, useCallback } from 'react';
 import {
   PoseLandmarker,
   FilesetResolver,
-  DrawingUtils,
 } from '@mediapipe/tasks-vision';
 import { useAppStore } from '../store/appStore';
 import { usePoseStore } from '../store/poseStore';

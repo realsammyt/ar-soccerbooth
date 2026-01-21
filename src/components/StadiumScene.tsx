@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Environment, ContactShadows, Text3D, Center, useTexture } from '@react-three/drei';
+import { Environment, ContactShadows, Text3D, Center } from '@react-three/drei';
 import * as THREE from 'three';
 import { usePoseStore } from '../store/poseStore';
 
@@ -66,7 +66,6 @@ function Confetti() {
   const groupRef = useRef<THREE.Group>(null);
   const particlesRef = useRef<THREE.Vector3[]>([]);
   const velocitiesRef = useRef<THREE.Vector3[]>([]);
-  const poseData = usePoseStore((s) => s.poseData);
 
   // Initialize particles
   if (particlesRef.current.length === 0) {
