@@ -24,8 +24,21 @@ export default defineConfig({
         },
       },
     },
+    // Copy WASM files to output without processing
+    copyPublicDir: true,
   },
+  // Ensure WASM files are served with correct MIME type
+  assetsInclude: ['**/*.wasm', '**/*.task', '**/*.hdr'],
   server: {
     port: 5173,
+    // Configure proper MIME types for development
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  // Optimize deps to exclude WASM-related packages from pre-bundling
+  optimizeDeps: {
+    exclude: ['@mediapipe/tasks-vision'],
   },
 });

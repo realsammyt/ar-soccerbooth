@@ -191,8 +191,8 @@ export function StadiumScene() {
       <pointLight position={[-5, 5, 5]} intensity={0.5} color="#4fc3f7" />
       <pointLight position={[5, 5, -5]} intensity={0.5} color="#ff9800" />
 
-      {/* Environment (stadium-like lighting) */}
-      <Environment preset="city" background={false} />
+      {/* Environment (stadium-like lighting) - using local HDR for offline kiosk */}
+      <Environment files="./hdri/potsdamer_platz_1k.hdr" background={false} />
 
       {/* Ground plane with grass texture */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>

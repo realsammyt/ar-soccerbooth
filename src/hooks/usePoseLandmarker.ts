@@ -8,9 +8,10 @@ import { usePoseStore } from '../store/poseStore';
 import type { LandmarkPoint } from '../types';
 import { QUALITY_MODES } from '../constants/display';
 
-// MediaPipe model paths
-const WASM_PATH = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.8/wasm';
-const MODEL_PATH = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
+// MediaPipe model paths - using local assets for offline kiosk deployment
+// Assets must be in public/ directory for Vite to serve them
+const WASM_PATH = './wasm';
+const MODEL_PATH = './models/pose_landmarker_lite.task';
 
 /**
  * Custom hook for MediaPipe Pose Landmarker with quality mode support

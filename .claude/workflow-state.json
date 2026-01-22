@@ -1,12 +1,17 @@
 {
-  "currentStage": "implement",
+  "currentStage": "test",
   "feature": "ar-soccerbooth: Portrait 9:16 Photo Booth with GCS Integration",
   "branch": "main",
   "startedAt": "2026-01-21T12:00:00.000Z",
   "history": [
-    {"stage": "plan", "completedAt": "2026-01-21T12:30:00.000Z", "notes": "Expert agents designed architecture and implementation plan"}
+    {"stage": "plan", "completedAt": "2026-01-21T12:30:00.000Z", "notes": "Expert agents designed architecture and implementation plan"},
+    {"stage": "design", "completedAt": "2026-01-21T13:00:00.000Z", "notes": "Architect agent completed system architecture document"},
+    {"stage": "implement", "completedAt": "2026-01-21T18:45:00.000Z", "notes": "Core v1.0.0 implemented: Electron kiosk, MediaPipe pose tracking, gesture detection, capture workflow, GCS upload, URL shortening, QR codes"}
   ],
   "blockers": [],
   "planPath": ".claude/plans/v1.0.0-initial.md",
-  "prNumber": null
+  "prNumber": null,
+  "releaseVersion": "v1.0.0",
+  "releaseUrl": "https://github.com/realsammyt/ar-soccerbooth/releases/tag/v1.0.0",
+  "pendingPhases": ["Phase 6: Admin Gallery Web App (Firebase Auth + Firestore)"]
 }
