@@ -11,7 +11,7 @@
   "blockers": [],
   "planPath": ".claude/plans/v1.0.0-initial.md",
   "prNumber": null,
-  "releaseVersion": "v1.0.0",
-  "releaseUrl": "https://github.com/realsammyt/ar-soccerbooth/releases/tag/v1.0.0",
+  "releaseVersion": "v1.0.1",
+  "releaseUrl": "https://github.com/realsammyt/ar-soccerbooth/releases/tag/v1.0.1",
   "pendingPhases": ["Phase 6: Admin Gallery Web App (Firebase Auth + Firestore)"]
 }

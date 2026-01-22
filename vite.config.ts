@@ -16,6 +16,13 @@ export default defineConfig({
     sourcemap: false,
     minify: 'esbuild',
     rollupOptions: {
+      onwarn(warning, warn) {
+        // Suppress source map warnings from third-party packages
+        if (warning.code === 'SOURCEMAP_ERROR') {
+          return;
+        }
+        warn(warning);
+      },
       output: {
         manualChunks: {
           'three': ['three'],

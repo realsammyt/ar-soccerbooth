@@ -1,6 +1,6 @@
 {
   "name": "ar-soccerbooth",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Portrait 9:16 AR photo booth kiosk with Google Cloud integration",
   "main": "dist-electron/main.js",
   "scripts": {

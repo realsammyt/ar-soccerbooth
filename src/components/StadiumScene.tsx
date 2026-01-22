@@ -1,8 +1,9 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Environment, ContactShadows, Text3D, Center } from '@react-three/drei';
+import { Environment, ContactShadows, Text3D, Center, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import { usePoseStore } from '../store/poseStore';
+import { PoseAvatar } from './avatar';
 
 // Scale factors for pose to world coordinate conversion
 const SCALE = {
@@ -173,23 +174,84 @@ function FloatingText() {
 }
 
 /**
- * Main stadium scene with soccer elements
+ * Stadium field lines decoration
+ */
+function FieldLines() {
+  return (
+    <group position={[0, -1.98, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      {/* Center circle */}
+      <mesh>
+        <ringGeometry args={[1.8, 1.9, 64]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.9} />
+      </mesh>
+      {/* Center line */}
+      <mesh position={[0, 0, 0]}>
+        <planeGeometry args={[0.08, 8]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.9} />
+      </mesh>
+      {/* Penalty box */}
+      <mesh position={[0, -2.5, 0]}>
+        <planeGeometry args={[4, 0.08]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.9} />
+      </mesh>
+      <mesh position={[-2, -3.5, 0]}>
+        <planeGeometry args={[0.08, 2]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.9} />
+      </mesh>
+      <mesh position={[2, -3.5, 0]}>
+        <planeGeometry args={[0.08, 2]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * Main stadium scene with soccer elements and pose-driven avatar
  */
 export function StadiumScene() {
   const isTracking = usePoseStore((s) => s.isTracking);
 
   return (
     <>
-      {/* Lighting */}
-      <ambientLight intensity={0.4} />
+      {/* Enhanced Lighting for better visual fidelity */}
+      <ambientLight intensity={0.3} />
+
+      {/* Main key light (stadium floodlight simulation) */}
       <directionalLight
-        position={[5, 10, 5]}
-        intensity={1}
+        position={[5, 12, 8]}
+        intensity={1.5}
         castShadow
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-far={50}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+        shadow-bias={-0.0001}
       />
-      <pointLight position={[-5, 5, 5]} intensity={0.5} color="#4fc3f7" />
-      <pointLight position={[5, 5, -5]} intensity={0.5} color="#ff9800" />
+
+      {/* Fill lights for depth */}
+      <directionalLight
+        position={[-8, 8, -5]}
+        intensity={0.4}
+        color="#87CEEB"
+      />
+
+      {/* Colored accent lights (stadium atmosphere) */}
+      <pointLight position={[-4, 6, 4]} intensity={0.8} color="#4fc3f7" distance={15} decay={2} />
+      <pointLight position={[4, 6, -4]} intensity={0.8} color="#ff9800" distance={15} decay={2} />
+      <pointLight position={[0, 3, 6]} intensity={0.5} color="#9c27b0" distance={12} decay={2} />
+
+      {/* Rim light for avatar outline */}
+      <spotLight
+        position={[0, 8, -8]}
+        angle={0.4}
+        penumbra={0.5}
+        intensity={1.2}
+        color="#ffffff"
+        castShadow={false}
+      />
 
       {/* Environment (stadium-like lighting) - using local HDR for offline kiosk */}
       <Environment files="./hdri/potsdamer_platz_1k.hdr" background={false} />
@@ -197,17 +259,46 @@ export function StadiumScene() {
       {/* Ground plane with grass texture */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>
         <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#2e7d32" roughness={0.8} />
+        <meshStandardMaterial
+          color="#1b5e20"
+          roughness={0.85}
+          metalness={0.05}
+        />
       </mesh>
 
-      {/* Contact shadows */}
+      {/* Field lines */}
+      <FieldLines />
+
+      {/* Contact shadows for grounding */}
       <ContactShadows
-        position={[0, -1.9, 0]}
-        opacity={0.4}
-        scale={10}
-        blur={2}
-        far={4}
+        position={[0, -1.95, 0]}
+        opacity={0.5}
+        scale={12}
+        blur={2.5}
+        far={5}
+        color="#000000"
       />
+
+      {/* Sparkle particles for atmosphere */}
+      <Sparkles
+        count={100}
+        scale={[8, 6, 8]}
+        position={[0, 1, 0]}
+        size={2}
+        speed={0.3}
+        opacity={0.4}
+        color="#ffd700"
+      />
+
+      {/* POSE-DRIVEN 3D AVATAR */}
+      {isTracking && (
+        <PoseAvatar
+          avatarType="skeleton"
+          position={[0, 0, 0]}
+          scale={1.0}
+          visibilityThreshold={0.5}
+        />
+      )}
 
       {/* Interactive elements - only when tracking */}
       {isTracking && (
@@ -221,21 +312,42 @@ export function StadiumScene() {
       {/* Stadium goal posts (background decoration) */}
       <group position={[0, 0, -5]}>
         {/* Left post */}
-        <mesh position={[-2, 1, 0]}>
-          <cylinderGeometry args={[0.05, 0.05, 2.4, 16]} />
-          <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+        <mesh position={[-2, 1, 0]} castShadow>
+          <cylinderGeometry args={[0.06, 0.06, 2.4, 16]} />
+          <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
         </mesh>
         {/* Right post */}
-        <mesh position={[2, 1, 0]}>
-          <cylinderGeometry args={[0.05, 0.05, 2.4, 16]} />
-          <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+        <mesh position={[2, 1, 0]} castShadow>
+          <cylinderGeometry args={[0.06, 0.06, 2.4, 16]} />
+          <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
         </mesh>
         {/* Crossbar */}
-        <mesh position={[0, 2.2, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.05, 0.05, 4, 16]} />
-          <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+        <mesh position={[0, 2.2, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.06, 0.06, 4, 16]} />
+          <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
+        </mesh>
+        {/* Net (simplified mesh) */}
+        <mesh position={[0, 1, -0.5]}>
+          <planeGeometry args={[4, 2.4]} />
+          <meshStandardMaterial
+            color="#cccccc"
+            transparent
+            opacity={0.3}
+            side={THREE.DoubleSide}
+            wireframe
+          />
         </mesh>
       </group>
+
+      {/* Stadium crowd blur (background depth) */}
+      <mesh position={[0, 2, -10]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[30, 12]} />
+        <meshBasicMaterial
+          color="#1a1a2e"
+          transparent
+          opacity={0.8}
+        />
+      </mesh>
     </>
   );
 }
